@@ -75,7 +75,7 @@ function PendingInvites() {
 
   const handleUnitClick = (id) => {
     console.log(`Unit ${id} clicked`);
-    // TODO: populate another component based on the clicked unit
+
   };
 
   if (!fetched) {

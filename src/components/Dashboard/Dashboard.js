@@ -7,10 +7,9 @@ import MainSideBar from './MainSideBar';
 import ChatBox from './ChatBox';
 import FriendsBox from './FriendsBox';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserById,  selectUser, selectSelectedFriend  } from '../../features/user/userSlice';
+import { fetchUserById, selectUser, selectSelectedFriend } from '../../features/user/userSlice';
 import AddFriendBox from './AddFriendOverlayBox';
 import { io } from 'socket.io-client';
-
 
 function Dashboard() {
   const { isLoggedIn, user } = useAuth();
@@ -71,11 +70,37 @@ function Dashboard() {
     }
   }, [socket, userData]);
 
+  const sendMessage = async (messageContent) => {
+    try {
+      const response = await fetch("/api/messages/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          senderId: userData.id,
+          receiverId: selectedFriend.id,
+          content: messageContent,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log("Message sent successfully.");
+      } else {
+        console.error("Error sending message:", data.message);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
   return (
     <div className="bar-container">
       <UserSideBar userData={userData} />
       <MainSideBar onAddFriendClick={() => setShowAddFriendBox(true)} />
-      <ChatBox selectedFriend={selectedFriend} />
+      <ChatBox selectedFriend={selectedFriend} sendMessage={sendMessage} />
       <FriendsBox />
       {showAddFriendBox && <AddFriendBox onClose={() => setShowAddFriendBox(false)} />}
     </div>
@@ -83,3 +108,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

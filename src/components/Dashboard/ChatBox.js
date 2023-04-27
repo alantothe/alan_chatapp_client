@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./dashboard.css";
 import Avatar from "react-avatar";
 
-function ChatBox({ selectedFriend }) {
+function ChatBox({ selectedFriend, sendMessage }) {
+  const [inputMessage, setInputMessage] = useState("");
+
+  const handleInputChange = (event) => {
+    setInputMessage(event.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (inputMessage.trim()) {
+      sendMessage(inputMessage);
+      setInputMessage("");
+    }
+  };
+
   return (
     <div className="bar ChatBox">
       <header>
@@ -36,15 +49,19 @@ function ChatBox({ selectedFriend }) {
           </div>
         )}
         <div className="chat-input">
-        <input type="text" placeholder="Type your message here" className="chat-input-field" />
-        <button>Send</button>
+        <input
+          type="text"
+          placeholder="Type your message here"
+          className="chat-input-field"
+          value={inputMessage}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleSendMessage}>Send</button>
       </div>
-    </div>
+
+      </div>
     </div>
   );
 }
 
-
 export default ChatBox;
-
-

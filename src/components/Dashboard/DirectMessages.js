@@ -48,7 +48,7 @@ function DirectMessages() {
           <p style={{ fontWeight: "bold" }}>
             {conversation.firstName} {conversation.lastName}
           </p>
-          {/* Add a button to remove the conversation for debugging */}
+          {/* button to remove the conversation for debugging or will use later for deleting conversations */}
           <button
             onClick={() => handleRemoveConversation(conversation.id)}
             style={{ marginLeft: "10px" }}

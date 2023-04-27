@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        setUser(response.data.user); // Update the user state here
+        setUser(response.data.user);
         console.log("User set:", response.data.user);
         setIsLoggedIn(true);
         return { success: true };

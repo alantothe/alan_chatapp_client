@@ -86,12 +86,6 @@ export const rejectFriendRequest = createAsyncThunk(
   }
 );
 
-
-
-
-
-
-
 const userSlice = createSlice({
   name: 'user',
   initialState: {
