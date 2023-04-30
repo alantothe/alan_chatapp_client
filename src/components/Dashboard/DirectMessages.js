@@ -3,11 +3,29 @@ import { useSelector, useDispatch } from "react-redux";
 import Avatar from "react-avatar";
 import { setActiveConversation } from "../../features/activeConversationSlice";
 import { selectUser } from "../../features/userSlice";
+import io from "socket.io-client";
+import { selectActiveConversation } from '../../features/activeConversationSlice';
 
 function DirectMessages() {
+  const socket = io("http://localhost:4000")
   const loggedInUser = useSelector(selectUser);
   const [conversations, setConversations] = useState([]);
   const dispatch = useDispatch();
+  const activeConversation = useSelector(selectActiveConversation);
+
+  useEffect(() => {
+    const handleConversationUpdated = () => {
+      fetchConversations(loggedInUser.id);
+    };
+
+    socket.on("conversation_updated", handleConversationUpdated);
+
+    // Clean up the listener when the component is unmounted
+    return () => {
+      socket.off("conversation_updated", handleConversationUpdated);
+    };
+  }, [loggedInUser.id, socket]);
+
 
   const handleClick = (conversation) => {
     dispatch(setActiveConversation(conversation));
@@ -21,7 +39,7 @@ function DirectMessages() {
 
   useEffect(() => {
     fetchConversations(loggedInUser.id);
-  }, [loggedInUser.id]);
+  }, [loggedInUser.id, activeConversation]);
 
   const conversationElements = conversations.map((conversation) => {
     const friend = conversation.friendData;

@@ -5,7 +5,7 @@ import Avatar from "react-avatar";
 import { acceptFriendRequest, rejectFriendRequest } from "../../features/userSlice";
 import { selectUser } from "../../features/userSlice";
 
-function PendingInvites() {
+function PendingInvites({socket}) {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const pendingInvites = useSelector(selectPendingInvites);
@@ -13,8 +13,18 @@ function PendingInvites() {
   useEffect(() => {
     if (user) {
       dispatch(fetchPendingInvites(user.id));
+
+      // Subscribe to the updatePendingInvites event from the server
+      socket.on("updatePendingInvites", () => {
+        dispatch(fetchPendingInvites(user.id));
+      });
     }
-  }, [dispatch, user]);
+
+    // Clean up the subscription on unmount
+    return () => {
+      socket.off("updatePendingInvites");
+    };
+  }, [dispatch, user, socket]);
 
   const handleAccept = (senderId) => {
     dispatch(acceptFriendRequest(senderId)).then(() => {

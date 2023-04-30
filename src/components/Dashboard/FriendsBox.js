@@ -4,6 +4,7 @@ import { fetchFriendsByUserId, selectFriends } from "../../features/friendsSlice
 import Avatar from "react-avatar";
 import { selectUser } from "../../features/userSlice";
 import { setActiveConversation } from "../../features/activeConversationSlice";
+import io from 'socket.io-client'
 
 function FriendsBox() {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ function FriendsBox() {
   const friends = useSelector(selectFriends);
   const friendsStatus = useSelector((state) => state.friends.status);
   const friendsError = useSelector((state) => state.friends.error);
+  const socket = io("http://localhost:4000");
 
   useEffect(() => {
     if (userId && friendsStatus === "idle") {
@@ -48,6 +50,7 @@ function FriendsBox() {
 
       if (selectedConversation) {
         dispatch(setActiveConversation(selectedConversation));
+        socket.emit("conversation_updated")
       }
     }
   };
@@ -82,8 +85,6 @@ function FriendsBox() {
 }
 
 export default FriendsBox;
-
-
 
 
 

@@ -134,6 +134,59 @@ header {
   border: 1px solid #0084ff;
 }
 
+.chat-history {
+  overflow-y: auto;
+  max-height: 400px;
+  margin-bottom: 10px;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.sent-message,
+.received-message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+
+.sent-message {
+  align-self: flex-start;
+}
+
+.received-message {
+  align-self: flex-start;
+}
+
+.message-avatar {
+  margin-right: 5px;
+}
+
+.message-info {
+  display: flex;
+  flex-direction: column;
+  color: #eee;
+
+}
+
+.message-info p {
+  margin: 0;
+}
+
+
+.chat-input {
+  display: flex;
+  align-items: center;
+}
+
+.chat-input-field {
+  flex-grow: 1;
+  margin-right: 5px;
+}
+
 
 
 

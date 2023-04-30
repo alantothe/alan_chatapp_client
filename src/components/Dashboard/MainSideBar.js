@@ -3,6 +3,7 @@ import AddFriendOverlayBox from "./AddFriendOverlayBox";
 import { useSelector } from "react-redux";
 import DirectMessages from "./DirectMessages";
 import PendingInvites from "./PendingInvites";
+import socket from '../../socketConnect/socket';
 
 function MainSideBar(props) {
   const [showAddFriendBox, setShowAddFriendBox] = useState(false);
@@ -35,10 +36,10 @@ function MainSideBar(props) {
           <div className="underline"></div>
         </header>
         {visibleContent === "directMessages" && <DirectMessages />}
-        {visibleContent === "pendingInvites" && <PendingInvites />}
+        {visibleContent === "pendingInvites" && <PendingInvites socket={socket} />}
       </div>
       {showAddFriendBox && (
-        <AddFriendOverlayBox onClose={handleAddFriendClose} userId={userId} />
+        <AddFriendOverlayBox onClose={handleAddFriendClose} userId={userId} socket={socket} />
       )}
     </div>
   );

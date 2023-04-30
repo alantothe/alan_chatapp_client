@@ -5,12 +5,13 @@ import axios from "axios";
 
 export const sendMessage = createAsyncThunk(
   "messages/sendMessage",
-  async ({ senderId, receiverId, content }, { dispatch }) => {
+  async ({ senderId, receiverId, content, senderData }, { dispatch }) => {
     try {
       const response = await axios.post("http://localhost:4000/api/messages", {
         senderId,
         receiverId,
         content,
+        senderData,
       });
 
       return response.data;
@@ -21,20 +22,34 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+
+
 export const fetchMessages = createAsyncThunk(
   "messages/fetchMessages",
-  async ({ senderId, receiverId }, { dispatch }) => {
+  async ({ senderId, receiverId }, { dispatch, getState }) => {
     try {
       const response = await axios.get(
         `http://localhost:4000/api/messages/${receiverId}/${senderId}`
       );
-      return response.data;
+
+      const messagesWithSenderInfo = response.data.map((message) => {
+        const sender = getState().user.data.id === message.senderId
+          ? getState().user.data
+          : getState().user.data.friends.find(
+              (friend) => friend.id === message.senderId
+            );
+
+        return { ...message, sender };
+      });
+
+      return messagesWithSenderInfo;
     } catch (error) {
       console.error(error);
       alert("An error occurred while fetching the messages.");
     }
   }
 );
+
 
 
 const messageSlice = createSlice({

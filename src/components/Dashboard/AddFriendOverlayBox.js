@@ -22,6 +22,8 @@ function AddFriendOverlayBox({ onClose, userId, socket }) {
         alert("Friend request sent!");
         const sender = responseAction.payload;
 
+        // Emit sendFriendRequest event to the server
+        socket.emit("sendFriendRequest");
 
       } else {
         alert("An error occurred while sending the friend request.");
