@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 
 
+
 const URL = "http://localhost:4000";
 const socket = io(URL, {
   autoConnect: false,
@@ -12,8 +13,10 @@ const socket = io(URL, {
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isLoggedIn, checkLoginStatus } = useAuth();
+  const { login, isLoggedIn, checkLoginStatus } = useAuth(socket);
+
   const navigate = useNavigate()
+
 
   useEffect(() => {
     checkLoginStatus();

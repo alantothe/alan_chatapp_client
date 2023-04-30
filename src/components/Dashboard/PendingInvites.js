@@ -1,91 +1,41 @@
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById, selectUser, updateUser } from "../../features/user/userSlice";
-import { acceptFriendRequest, rejectFriendRequest } from "../../features/user/userSlice";
+import { fetchPendingInvites, selectPendingInvites } from "../../features/pendingInvitesSlice";
 import Avatar from "react-avatar";
-
-const URL = "http://localhost:4000";
-const socket = io(URL, {
-  autoConnect: false,
-});
+import { acceptFriendRequest, rejectFriendRequest } from "../../features/userSlice";
+import { selectUser } from "../../features/userSlice";
 
 function PendingInvites() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [fetched, setFetched] = useState(false);
-  const [requests, setRequests] = useState(user.friendRequests);
+  const pendingInvites = useSelector(selectPendingInvites);
 
   useEffect(() => {
     if (user) {
-      // Connect the socket and register the user's email
-      socket.connect();
-      socket.emit("register_email", { email: user.email });
-      console.log(user.email)
+      dispatch(fetchPendingInvites(user.id));
     }
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [user]);
-
-  useEffect(() => {
-    if (user && !fetched) {
-      dispatch(fetchUserById(user.id)).then((response) => {
-        dispatch(updateUser(response.payload));
-        setFetched(true);
-      });
-    }
-  }, [dispatch, user, fetched]);
-
-  useEffect(() => {
-    socket.on("send_friend_request", () => {
-      console.log("Received friend request");
-      setFetched(false); // reset fetched state to refetch data
-    });
-    return () => {
-      socket.off("send_friend_request");
-    };
-  }, []);
-  useEffect(() => {
-    setRequests(user.friendRequests);
-  }, [user.friendRequests]);
-
-  useEffect(() => {
-    socket.on("accept_friend_request", () => {
-      console.log("Friend request accepted");
-      setFetched(false); // reset fetched state to refetch data
-    });
-    return () => {
-      socket.off("accept_friend_request");
-    };
-  }, []);
+  }, [dispatch, user]);
 
   const handleAccept = (senderId) => {
     dispatch(acceptFriendRequest(senderId)).then(() => {
-      setRequests(requests.filter(request => request.id !== senderId));
+      dispatch(fetchPendingInvites(user.id));
     });
   };
 
   const handleReject = (senderId) => {
     dispatch(rejectFriendRequest(senderId)).then(() => {
-      setRequests(requests.filter(request => request.id !== senderId));
+      dispatch(fetchPendingInvites(user.id));
     });
   };
 
   const handleUnitClick = (id) => {
     console.log(`Unit ${id} clicked`);
-
   };
-
-  if (!fetched) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div>
       <h2>Pending Friend Requests</h2>
-      {requests.map((request) => (
+      {pendingInvites.map((request) => (
         <div key={request.id} onClick={() => handleUnitClick(request.id)}>
           <div style={{display: 'flex', alignItems: 'center'}}>
             <Avatar size={40} round src={request.avatar} alt={`${request.firstName} ${request.lastName}`} style={{marginRight: '10px'}} />
@@ -97,9 +47,6 @@ function PendingInvites() {
       ))}
     </div>
   );
-
 }
 
 export default PendingInvites;
-
-

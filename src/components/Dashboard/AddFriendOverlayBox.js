@@ -4,7 +4,7 @@ import "./AddFriendOverlayBox.css";
 import socket from '../../socket';
 
 
-import { sendFriendRequest } from "../../features/user/userSlice";
+import { sendFriendRequest } from "../../features/userSlice";
 
 function AddFriendOverlayBox({ onClose, userId }) {
 
@@ -66,4 +66,3 @@ function AddFriendOverlayBox({ onClose, userId }) {
 }
 
 export default AddFriendOverlayBox;
-

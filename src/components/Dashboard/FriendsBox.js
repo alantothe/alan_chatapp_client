@@ -1,86 +1,89 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById, selectUser, updateUser, setSelectedFriend } from "../../features/user/userSlice";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchFriendsByUserId, selectFriends } from "../../features/friendsSlice";
 import Avatar from "react-avatar";
+import { selectUser } from "../../features/userSlice";
+import { setActiveConversation } from "../../features/activeConversationSlice";
 
 function FriendsBox() {
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [fetched, setFetched] = useState(false);
-  const [friends, setFriends] = useState(user.friends || []);
-  const [refresh, setRefresh] = useState(false);
+  const user = useSelector(selectUser); // Get the user data
+  const userId = user?.id; // Get the userId from the user data
+  const friends = useSelector(selectFriends);
+  const friendsStatus = useSelector((state) => state.friends.status);
+  const friendsError = useSelector((state) => state.friends.error);
 
   useEffect(() => {
-    if (user.socket) {
-      user.socket.on("friend_request_accepted", () => {
-        console.log("friend_request_accepted event received");
-        setRefresh((prev) => !prev); // Toggle the refresh state
-      });
+    if (userId && friendsStatus === "idle") {
+      dispatch(fetchFriendsByUserId(userId));
     }
-    return () => {
-      if (user.socket) {
-        user.socket.off("friend_request_accepted");
+  }, [dispatch, friendsStatus, userId]);
+  const handleFriendClick = async (friend) => {
+    const response = await fetch("/api/conversations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        friendId: friend.id,
+      }),
+    });
+
+    if (response.ok) {
+      const newConversation = await response.json();
+      const updatedConversation = {
+        ...newConversation,
+        friendData: friend,
+      };
+      dispatch(setActiveConversation(updatedConversation));
+    } else {
+      const existingConversation = await fetch(
+        `/api/conversations/${user.id}`
+      ).then((res) => res.json());
+
+      const selectedConversation = existingConversation.find((conversation) =>
+        conversation.participants.some((participant) => participant.id === friend.id)
+      );
+
+      if (selectedConversation) {
+        dispatch(setActiveConversation(selectedConversation));
       }
-    };
-  }, [user]);
-
-  useEffect(() => {
-    if (user && !fetched) {
-      dispatch(fetchUserById(user.id)).then((response) => {
-        console.log("user data fetched", response);
-        dispatch(updateUser(response.payload));
-        setFetched(true);
-      });
     }
-  }, [dispatch, user, fetched]);
-
-  useEffect(() => {
-    if (user.friends) {
-      setFriends(user.friends);
-    }
-  }, [user.friends]);
-
-  function handleFriendClick(friend) {
-    dispatch(setSelectedFriend(friend));
-  }
+  };
 
 
-  if (!fetched) {
-    return <div>Loading...</div>;
+
+  let content;
+  if (friendsStatus === "loading") {
+    content = <div>Loading...</div>;
+  } else if (friendsStatus === "succeeded") {
+    content = friends.map((friend) => (
+      <div
+        key={friend.id}
+        onClick={() => handleFriendClick(friend)}
+      >
+        <Avatar src={friend.avatar} size="40" round={true} />
+        <span>
+          {friend.firstName} {friend.lastName}
+        </span>
+      </div>
+    ));
+  } else if (friendsStatus === "failed") {
+    content = <div>Error: {friendsError}</div>;
   }
 
   return (
     <div className="bar FriendsBox">
-      <div className="friends">
-        <h1 className="white-text centered-text">Friends</h1>
-        {friends.map((friend) => {
-          if (friend) {
-            return (
-              <div
-    key={friend.id}
-    onClick={() => handleFriendClick(friend)}
-    style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}
-  >
-    <Avatar
-      size={50}
-      round
-      src={friend.avatar}
-      alt={`${friend.firstName} ${friend.lastName}`}
-      style={{ marginRight: "10px" }}
-    />
-    <p style={{ fontWeight: "bold", color: "white" }}>
-      {friend.firstName} {friend.lastName}
-    </p>
-  </div>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </div>
+      <h1 className="white-text centered-text">Friends</h1>
+      {content}
     </div>
   );
 }
 
 export default FriendsBox;
+
+
+
+
 

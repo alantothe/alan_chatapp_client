@@ -2,6 +2,11 @@ import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 import io from 'socket.io-client';
 import axios from 'axios';
 
+const socket = io("http://localhost:4000", {
+  autoConnect: false,
+});
+
+
 export const fetchUserById = createAsyncThunk(
   'user/fetchUserById',
   async (userId, { rejectWithValue }) => {
@@ -19,14 +24,6 @@ export const fetchUserById = createAsyncThunk(
     }
   }
 );
-
-const socket = io("http://localhost:4000", {
-  autoConnect: false,
-});
-
-
-
-
 export const sendFriendRequest = createAsyncThunk(
   "user/sendFriendRequest",
   async ({ senderId, recipientEmail }, { dispatch }) => {
@@ -50,7 +47,6 @@ export const sendFriendRequest = createAsyncThunk(
     }
   }
 );
-
 export const acceptFriendRequest = createAsyncThunk(
   "user/acceptFriendRequest",
   async (senderId, { dispatch, getState }) => {
@@ -67,8 +63,6 @@ export const acceptFriendRequest = createAsyncThunk(
     }
   }
 );
-
-
 export const rejectFriendRequest = createAsyncThunk(
   "user/rejectFriendRequest",
   async (senderId, { dispatch, getState }) => {

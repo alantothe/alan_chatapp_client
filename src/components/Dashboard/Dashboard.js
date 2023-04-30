@@ -7,7 +7,7 @@ import MainSideBar from './MainSideBar';
 import ChatBox from './ChatBox';
 import FriendsBox from './FriendsBox';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserById, selectUser, selectSelectedFriend } from '../../features/user/userSlice';
+import { fetchUserById, selectUser, selectSelectedFriend } from '../../features/userSlice';
 import AddFriendBox from './AddFriendOverlayBox';
 import { io } from 'socket.io-client';
 
@@ -47,28 +47,6 @@ function Dashboard() {
     }
   }, [dispatch, endpoint, user]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('user_data_updated', (data) => {
-        if (userData && userData.id === data.id) {
-          setUserData(data);
-        }
-      });
-
-      socket.on('friend_request_received', (data) => {
-        if (userData && userData.id === data.receiverId) {
-          setUserData({
-            ...userData,
-            friendRequests: [...userData.friendRequests, data.friendRequest],
-          });
-        }
-      });
-
-      return () => {
-        socket.disconnect();
-      };
-    }
-  }, [socket, userData]);
 
   const sendMessage = async (messageContent) => {
     try {
@@ -96,11 +74,33 @@ function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('user_data_updated', (data) => {
+        if (userData && userData.id === data.id) {
+          setUserData(data);
+        }
+      });
+
+      socket.on('friend_request_received', (data) => {
+        if (userData && userData.id === data.receiverId) {
+          setUserData({
+            ...userData,
+            friendRequests: [...userData.friendRequests, data.friendRequest],
+          });
+        }
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [socket, userData]);
   return (
     <div className="bar-container">
       <UserSideBar userData={userData} />
       <MainSideBar onAddFriendClick={() => setShowAddFriendBox(true)} />
-      <ChatBox selectedFriend={selectedFriend} sendMessage={sendMessage} />
+      <ChatBox selectedFriend={selectedFriend} sendMessage={sendMessage} socket={socket} />
       <FriendsBox />
       {showAddFriendBox && <AddFriendBox onClose={() => setShowAddFriendBox(false)} />}
     </div>

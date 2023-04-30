@@ -8,9 +8,14 @@ const conversationsSlice = createSlice({
       const conversationExists = state.some(
         (conversation) => conversation.id === action.payload.id
       );
+
       if (!conversationExists) {
-        state.push(action.payload);
+        state.push({ ...action.payload, isActive: true });
       }
+
+      state.forEach((conversation) => {
+        conversation.isActive = conversation.id === action.payload.id;
+      });
     },
     removeConversation: (state, action) => {
       return state.filter(
