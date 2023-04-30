@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import "./AddFriendOverlayBox.css";
-import socket from '../../socket';
-
-
 import { sendFriendRequest } from "../../features/userSlice";
 
-function AddFriendOverlayBox({ onClose, userId }) {
-
+function AddFriendOverlayBox({ onClose, userId, socket }) {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
 
@@ -21,15 +17,11 @@ function AddFriendOverlayBox({ onClose, userId }) {
     try {
       const responseAction = await dispatch(
         sendFriendRequest({ senderId: userId, recipientEmail: email })
-
       );
       if (responseAction.payload) {
         alert("Friend request sent!");
         const sender = responseAction.payload;
 
-
-        // Emit the "send_friend_request" event after a successful friend request
-        socket.emit('send_friend_request', { senderId: userId, recipientEmail: email });
 
       } else {
         alert("An error occurred while sending the friend request.");
@@ -40,7 +32,6 @@ function AddFriendOverlayBox({ onClose, userId }) {
     }
     setEmail("");
   };
-
 
   return (
     <div className="add-friend-overlay-box">

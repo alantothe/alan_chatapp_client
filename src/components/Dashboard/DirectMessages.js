@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Avatar from 'react-avatar';
-import { setActiveConversation } from '../../features/activeConversationSlice';
-import { selectUser } from '../../features/userSlice';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Avatar from "react-avatar";
+import { setActiveConversation } from "../../features/activeConversationSlice";
+import { selectUser } from "../../features/userSlice";
 
 function DirectMessages() {
   const loggedInUser = useSelector(selectUser);
@@ -31,10 +31,10 @@ function DirectMessages() {
         key={conversation._id}
         onClick={() => handleClick(conversation)}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '10px',
-          cursor: 'pointer',
+          display: "flex",
+          alignItems: "center",
+          marginBottom: "10px",
+          cursor: "pointer",
         }}
       >
         <Avatar
@@ -42,9 +42,9 @@ function DirectMessages() {
           round
           src={friend.avatar}
           alt={`${friend.firstName} ${friend.lastName}`}
-          style={{ marginRight: '10px' }}
+          style={{ marginRight: "10px" }}
         />
-        <p style={{ fontWeight: 'bold' }}>
+        <p style={{ fontWeight: "bold" }}>
           {friend.firstName} {friend.lastName}
         </p>
       </div>
@@ -60,3 +60,4 @@ function DirectMessages() {
 }
 
 export default DirectMessages;
+

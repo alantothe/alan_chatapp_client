@@ -1,14 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-import { io } from "socket.io-client";
-
-
-
-const URL = "http://localhost:4000";
-const socket = io(URL, {
-  autoConnect: false,
-});
 
 const AuthContext = createContext();
 
@@ -41,10 +33,9 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        setUser(response.data.user);
+        setUser(response.data.user); // Update the user state here
         console.log("User set:", response.data.user);
         setIsLoggedIn(true);
-
         return { success: true };
       } else {
         return { success: false, message: "Login failed" };
@@ -53,7 +44,6 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: error.message };
     }
   };
-
 
 
   const register = async (firstName, lastName, email, password) => {
@@ -82,10 +72,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-<AuthContext.Provider value={{ isLoggedIn, register ,login, logout, checkLoginStatus, user, setIsLoggedIn }}>
-    {children}
-</AuthContext.Provider>
-
+    <AuthContext.Provider value={{ isLoggedIn, register ,login, logout, checkLoginStatus, user, setIsLoggedIn }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

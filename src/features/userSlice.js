@@ -1,11 +1,5 @@
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import io from 'socket.io-client';
 import axios from 'axios';
-
-const socket = io("http://localhost:4000", {
-  autoConnect: false,
-});
-
 
 export const fetchUserById = createAsyncThunk(
   'user/fetchUserById',
@@ -24,6 +18,7 @@ export const fetchUserById = createAsyncThunk(
     }
   }
 );
+
 export const sendFriendRequest = createAsyncThunk(
   "user/sendFriendRequest",
   async ({ senderId, recipientEmail }, { dispatch }) => {
@@ -35,9 +30,6 @@ export const sendFriendRequest = createAsyncThunk(
 
       const data = response.data;
 
-      // Emit the "send_friend_request" event after a successful friend request
-      socket.emit("send_friend_request", { senderId, recipientEmail });
-
       // Return the sender's information
       return data;
 
@@ -47,6 +39,7 @@ export const sendFriendRequest = createAsyncThunk(
     }
   }
 );
+
 export const acceptFriendRequest = createAsyncThunk(
   "user/acceptFriendRequest",
   async (senderId, { dispatch, getState }) => {
@@ -63,6 +56,7 @@ export const acceptFriendRequest = createAsyncThunk(
     }
   }
 );
+
 export const rejectFriendRequest = createAsyncThunk(
   "user/rejectFriendRequest",
   async (senderId, { dispatch, getState }) => {
@@ -140,6 +134,9 @@ export const selectSelectedFriend = createSelector(
   (state) => state.user,
   (user) => user.selectedFriend
 );
+export const selectUserById = (state, userId) =>
+  state.user.data && state.user.data.id === userId ? state.user.data : null;
+
 
 
 // Export the updateUser action

@@ -2,14 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth';
 import './dashboard.css';
-import { useSelector } from 'react-redux';
 import Avatar from 'react-avatar';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../features/userSlice';
 
 
 function UserSideBar() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const userData = useSelector((state) => state.user.data);
+  const userData = useSelector(selectUser);
 
   const handleLogout = () => {
     logout();
