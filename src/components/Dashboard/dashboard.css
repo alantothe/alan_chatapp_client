@@ -53,10 +53,10 @@ header {
 }
 
 .underline {
-  width: 70%;
+  width: 100%;
   height: 2px;
   background-color: white;
-  margin-top: 20px;
+
 }
 
 .ChatBox {

@@ -22,14 +22,17 @@ function MainSideBar(props) {
     <div className="bar MainSideBar">
       <div className="content-wrapper">
         <header>
-          <button className="add-friend-button" onClick={handleAddFriendClick}>
+          <button
+            className="bg-purple-500 text-white font-bold py-2 px-4 mt-5 w-full h-12"
+            onClick={handleAddFriendClick}
+          >
             ADD FRIEND
           </button>
           <div className="button-group">
-            <button onClick={() => setVisibleContent("directMessages")}>
+            <button className="bg-white text-black py-2 px-4 mt-3 mb-10 h-10" onClick={() => setVisibleContent("directMessages")}>
               Direct Message
             </button>
-            <button onClick={() => setVisibleContent("pendingInvites")}>
+            <button className="bg-white text-black py-2 px-4 mt-3 mb-10 w-100 h-10" onClick={() => setVisibleContent("pendingInvites")}>
               Pending Invites
             </button>
           </div>
@@ -46,7 +49,3 @@ function MainSideBar(props) {
 }
 
 export default MainSideBar;
-
-
-
-

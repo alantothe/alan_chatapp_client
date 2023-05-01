@@ -65,11 +65,21 @@ function FriendsBox() {
       <div
         key={friend.id}
         onClick={() => handleFriendClick(friend)}
+        className="flex items-center py-4 px-6 cursor-pointer w-full justify-start"
       >
-        <Avatar src={friend.avatar} size="40" round={true} />
-        <span>
-          {friend.firstName} {friend.lastName}
-        </span>
+        <Avatar
+          src={friend.avatar}
+          size="50"
+          round={true}
+          className="mr-4 w-12 h-12"
+        />
+        <div className="flex-1 ml-2 flex justify-start">
+          <div>
+            <p className="text-white font-bold">
+              {friend.firstName} {friend.lastName}
+            </p>
+          </div>
+        </div>
       </div>
     ));
   } else if (friendsStatus === "failed") {
@@ -78,7 +88,8 @@ function FriendsBox() {
 
   return (
     <div className="bar FriendsBox">
-      <h1 className="white-text centered-text">Friends</h1>
+      <h1 className="text-white text-center text-3xl pt-3">Friends</h1>
+
       {content}
     </div>
   );

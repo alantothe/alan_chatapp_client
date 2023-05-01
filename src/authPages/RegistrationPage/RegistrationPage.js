@@ -69,50 +69,57 @@ function RegistrationPage() {
 
 
   return (
-    <div className="container">
-      <h1>Registration Page</h1>
-
-      <div className="formGroup">
-        <label htmlFor="firstName">First Name:</label>
+    <div className="bg-purple-500 min-h-screen flex items-center justify-center">
+  <section className="bg-gray-800 p-10 rounded-lg w-200">
+    <header className="text-center">
+      <h1 className="text-4xl font-bold mb-10 text-white">Registration Page</h1>
+    </header>
+    <form className="flex flex-col items-center space-y-6">
+      <div className="formGroup w-full">
+        <label htmlFor="firstName" className="text-white mb-1">First Name:</label>
         <input
           type="text"
           id="firstName"
           value={firstName}
           onChange={handleFirstNameChange}
+          className="bg-white rounded px-3 py-2 w-full"
         />
       </div>
-      <div className="formGroup">
-        <label htmlFor="lastName">Last Name:</label>
+      <div className="formGroup w-full">
+        <label htmlFor="lastName" className="text-white mb-1">Last Name:</label>
         <input
           type="text"
           id="lastName"
           value={lastName}
           onChange={handleLastNameChange}
+          className="bg-white rounded px-3 py-2 w-full"
         />
       </div>
-      <div className="formGroup">
-        <label htmlFor="email">Email:</label>
+      <div className="formGroup w-full">
+        <label htmlFor="email" className="text-white mb-1">Email:</label>
         <input
           type="text"
           id="email"
           value={email}
           onChange={handleEmailChange}
+          className="bg-white rounded px-3 py-2 w-full"
         />
       </div>
-      <div className="formGroup">
-        <label htmlFor="password">Password:</label>
+      <div className="formGroup w-full">
+        <label htmlFor="password" className="text-white mb-1">Password:</label>
         <input
           type="password"
           id="password"
           value={password}
           onChange={handlePasswordChange}
+          className="bg-white rounded px-3 py-2 w-full"
         />
       </div>
-      <div className="formGroup">
-        <label>Upload your avatar:</label>
+      <div className="formGroup w-full">
+        <label className="text-white mb-1">Upload your avatar:</label>
         <div
           {...getRootProps()}
-          className={`dropzone ${isDragActive ? 'dropzoneActive' : ''}`}
+          className={`dropzone ${isDragActive ? 'dropzoneActive' : ''} bg-white rounded px-3 py-2 w-full text-center`}
         >
           <input {...getInputProps()} />
           {isDragActive ? (
@@ -121,22 +128,35 @@ function RegistrationPage() {
             <p>Drag and drop some files here, or click to select files</p>
           )}
         </div>
+
         {avatar && (
           <Avatar
             src={avatar}
             round={true}
             size="100"
-            className="avatarPreview"
+            className="avatarPreview ml-12 mb-6 mt-6 flex items-center"
           />
+
         )}
-      </div>
-      <button type="submit" onClick={handleRegister} className="button">
+        </div>
+
+      <button
+        type="submit"
+        onClick={handleRegister}
+        className="button bg-purple-500 text-white rounded px-5 py-2 mb-6 w-full"
+      >
         Register
       </button>
-       <button onClick={handleRedirect} className="button">
+      <button
+        onClick={handleRedirect}
+        className="button bg-transparent text-purple-500 rounded px-5 py-2 w-full"
+      >
         Login?
       </button>
-    </div>
+    </form>
+  </section>
+</div>
+
   );
 }
 

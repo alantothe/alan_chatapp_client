@@ -48,30 +48,31 @@ function DirectMessages() {
       <div
         key={conversation._id}
         onClick={() => handleClick(conversation)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "10px",
-          cursor: "pointer",
-        }}
+        className="flex items-center py-4 px-6 cursor-pointer w-full justify-start"
       >
         <Avatar
           size={50}
           round
           src={friend.avatar}
           alt={`${friend.firstName} ${friend.lastName}`}
-          style={{ marginRight: "10px" }}
+          className="mr-4 w-12 h-12"
         />
-        <p style={{ fontWeight: "bold" }}>
-          {friend.firstName} {friend.lastName}
-        </p>
+        <div className="flex-1 ml-2 flex justify-start">
+          <div>
+            <p className="text-white font-bold">{friend.firstName} {friend.lastName}</p>
+
+          </div>
+        </div>
       </div>
     );
-  });
+
+
+
+  })
 
   return (
-    <div>
-      <h2>Direct Messages</h2>
+    <div className="w-full pl-20 flex flex-col items-start">
+
       {conversationElements}
     </div>
   );
