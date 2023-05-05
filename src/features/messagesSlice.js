@@ -7,7 +7,7 @@ export const sendMessage = createAsyncThunk(
   "messages/sendMessage",
   async ({ senderId, receiverId, content, senderData }, { dispatch }) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/messages", {
+      const response = await axios.post("/api/messages", {
         senderId,
         receiverId,
         content,
@@ -25,11 +25,11 @@ export const sendMessage = createAsyncThunk(
 
 
 export const fetchMessages = createAsyncThunk(
-  "messages/fetchMessages",
+  "api/messages/fetchMessages",
   async ({ senderId, receiverId }, { dispatch, getState }) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/messages/${receiverId}/${senderId}`
+        `api/messages/${receiverId}/${senderId}`
       );
 
       const messagesWithSenderInfo = response.data.map((message) => {

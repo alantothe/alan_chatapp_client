@@ -14,8 +14,16 @@ function DirectMessages() {
   const activeConversation = useSelector(selectActiveConversation);
 
   useEffect(() => {
-    const handleConversationUpdated = () => {
+    if (loggedInUser && loggedInUser.id) {
       fetchConversations(loggedInUser.id);
+    }
+  }, [loggedInUser, activeConversation]);
+
+  useEffect(() => {
+    const handleConversationUpdated = () => {
+      if (loggedInUser && loggedInUser.id) {
+        fetchConversations(loggedInUser.id);
+      }
     };
 
     socket.on("conversation_updated", handleConversationUpdated);
@@ -24,8 +32,7 @@ function DirectMessages() {
     return () => {
       socket.off("conversation_updated", handleConversationUpdated);
     };
-  }, [loggedInUser.id, socket]);
-
+  }, [loggedInUser, socket]);
 
   const handleClick = (conversation) => {
     dispatch(setActiveConversation(conversation));
@@ -38,8 +45,10 @@ function DirectMessages() {
   };
 
   useEffect(() => {
-    fetchConversations(loggedInUser.id);
-  }, [loggedInUser.id, activeConversation]);
+    if (loggedInUser && loggedInUser.id) {
+      fetchConversations(loggedInUser.id);
+    }
+  }, [loggedInUser, activeConversation]);
 
   const conversationElements = conversations.map((conversation) => {
     const friend = conversation.friendData;
@@ -60,23 +69,17 @@ function DirectMessages() {
         <div className="flex-1 ml-2 flex justify-start">
           <div>
             <p className="text-white font-bold">{friend.firstName} {friend.lastName}</p>
-
           </div>
         </div>
       </div>
     );
-
-
-
   })
 
   return (
     <div className="w-full pl-20 flex flex-col items-start">
-
       {conversationElements}
     </div>
   );
 }
 
 export default DirectMessages;
-

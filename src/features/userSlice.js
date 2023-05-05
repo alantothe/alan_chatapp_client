@@ -5,7 +5,7 @@ export const fetchUserById = createAsyncThunk(
   'user/fetchUserById',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/user/${userId}`);
+      const response = await fetch(`api/user/${userId}`);
 
       if (!response.ok) {
         throw new Error(`Error fetching user: ${response.statusText}`);
@@ -23,7 +23,7 @@ export const sendFriendRequest = createAsyncThunk(
   "user/sendFriendRequest",
   async ({ senderId, recipientEmail }, { dispatch }) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/user/send-friend-request", {
+      const response = await axios.post("api/user/send-friend-request", {
         senderId,
         recipientEmail,
       });
@@ -45,7 +45,7 @@ export const acceptFriendRequest = createAsyncThunk(
   async (senderId, { dispatch, getState }) => {
     try {
       const { id } = getState().user.data;
-      const response = await axios.post("http://localhost:4000/api/user/accept-friend-request", {
+      const response = await axios.post("api/user/accept-friend-request", {
         senderId,
         receiverId: id,
       });
@@ -62,7 +62,7 @@ export const rejectFriendRequest = createAsyncThunk(
   async (senderId, { dispatch, getState }) => {
     try {
       const { id } = getState().user.data;
-      const response = await axios.post("http://localhost:4000/api/user/reject-friend-request", {
+      const response = await axios.post("api/user/reject-friend-request", {
         senderId,
         receiverId: id,
       });

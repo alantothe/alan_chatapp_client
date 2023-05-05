@@ -7,6 +7,7 @@ import messagesReducer from './features/messagesSlice'
 import friendsReducer from './features/friendsSlice';
 import pendingInvitesReducer from './features/pendingInvitesSlice';
 import activeConversationReducer from './features/activeConversationSlice';
+import notificationsReducer from './features/notificationsSlice';
 
 
 const persistConfig = {
@@ -24,6 +25,7 @@ const store = configureStore({
     friends: friendsReducer,
     pendingInvites: pendingInvitesReducer,
     activeConversation: activeConversationReducer,
+    notifications: notificationsReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: {

@@ -16,10 +16,29 @@ function FriendsBox() {
   const socket = io("http://localhost:4000");
 
   useEffect(() => {
+    if (!userId) return;
+
+    const handleUpdateFriendsList = () => {
+      dispatch(fetchFriendsByUserId(userId));
+    };
+
+    socket.on("updateFriendsList", handleUpdateFriendsList);
+
+    return () => {
+      socket.off("updateFriendsList", handleUpdateFriendsList);
+    };
+  }, [dispatch, userId, socket]);
+
+
+
+  useEffect(() => {
     if (userId && friendsStatus === "idle") {
       dispatch(fetchFriendsByUserId(userId));
     }
   }, [dispatch, friendsStatus, userId]);
+
+
+
   const handleFriendClick = async (friend) => {
     const response = await fetch("/api/conversations", {
       method: "POST",
@@ -83,7 +102,7 @@ function FriendsBox() {
       </div>
     ));
   } else if (friendsStatus === "failed") {
-    content = <div>Error: {friendsError}</div>;
+    content = <div>No Friends {friendsError}</div>;
   }
 
   return (

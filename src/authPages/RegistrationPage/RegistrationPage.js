@@ -141,7 +141,7 @@ function RegistrationPage() {
         </div>
 
       <button
-        type="submit"
+        type="button"
         onClick={handleRegister}
         className="button bg-purple-500 text-white rounded px-5 py-2 mb-6 w-full"
       >
